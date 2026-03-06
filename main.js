@@ -3,6 +3,10 @@
    Claim Upload → Analysis → Results App Logic
    ===================================================== */
 
+// ==================== API CONFIG ====================
+const API_BASE = 'http://localhost:8000';
+let apiResponsePromise = null;
+
 // ==================== ENTER APP ====================
 function enterApp(claimType) {
     const landing = document.getElementById('landing-page');
@@ -17,6 +21,17 @@ function enterApp(claimType) {
         lucide.createIcons();
         switchView('analyze');
         if (claimType) selectClaimType(claimType);
+        // Check API health silently
+        fetch(API_BASE + '/health')
+            .then(r => r.json())
+            .then(data => {
+                if (!data.models_loaded) {
+                    showToast('AI models are initialising — first prediction may take ~60 s', 'info');
+                }
+            })
+            .catch(() => {
+                showToast('API server offline — demo mode active (no live scoring)', 'danger');
+            });
     }, 350);
 }
 
@@ -43,7 +58,7 @@ function switchView(view) {
 }
 
 // ==================== UPLOAD FLOW ====================
-let selectedType = 'medical';
+let selectedType = 'motor';
 let fileAttached = false;
 let csvBatchResults = null;
 
@@ -61,6 +76,53 @@ function triggerUpload() {
     document.getElementById('file-input').click();
 }
 
+// ==================== CSV HELPERS ====================
+function parseCsvToClaimInputs(text) {
+    const lines = text.trim().split('\n');
+    if (lines.length < 2) return [];
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+
+    const formatDate = d => {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        return `${dd}/${mm}/${d.getFullYear()}`;
+    };
+    const now = new Date();
+    const baseDefaults = {
+        Date_start_contract: formatDate(new Date(now - 365 * 86400000)),
+        Date_last_renewal: formatDate(new Date(now - 365 * 86400000)),
+        Date_next_renewal: formatDate(new Date(now.getFullYear() + 1, now.getMonth(), now.getDate())),
+        Date_birth: formatDate(new Date(now.getFullYear() - 38, 6, 15)),
+        Date_driving_licence: formatDate(new Date(now.getFullYear() - 18, 3, 20)),
+        Date_lapse: null,
+        Seniority: 1.0, Policies_in_force: 1, Max_policies: 1, Max_products: 1,
+        Lapse: 0, Payment: 0, Distribution_channel: 1, Second_driver: 0,
+        Premium: 500, Cost_claims_year: 0, N_claims_year: 0,
+        N_claims_history: 0, R_Claims_history: 0,
+        Type_risk: 3, Area: 1, Year_matriculation: 2018,
+        Power: 90, Cylinder_capacity: 1600, Value_vehicle: 15000,
+        N_doors: 4, Weight: 1200, Length: 4500, Type_fuel: 'P', claim_records: null
+    };
+    const numericFields = new Set(['Seniority','Policies_in_force','Max_policies','Max_products','Lapse',
+        'Payment','Distribution_channel','Second_driver','Premium','Cost_claims_year','N_claims_year',
+        'N_claims_history','R_Claims_history','Type_risk','Area','Year_matriculation','Power',
+        'Cylinder_capacity','Value_vehicle','N_doors','Weight','Length']);
+
+    return lines.slice(1).filter(l => l.trim()).map((line, idx) => {
+        const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        const row = {};
+        headers.forEach((h, i) => { row[h] = vals[i] ?? ''; });
+        const claim = { ...baseDefaults };
+        Object.keys(row).forEach(key => {
+            if (key in claim && row[key] !== '') {
+                claim[key] = numericFields.has(key) ? (parseFloat(row[key]) || baseDefaults[key]) : row[key];
+            }
+        });
+        claim.ID = parseInt(row.ID || row.policy_id || row.id || '') || (idx + 1);
+        return claim;
+    });
+}
+
 function handleFileSelect(input) {
     if (!input.files || !input.files[0]) return;
     const f = input.files[0];
@@ -70,26 +132,11 @@ function handleFileSelect(input) {
     if (f.name.toLowerCase().endsWith('.csv')) {
         const reader = new FileReader();
         reader.onload = function (e) {
-            const text = e.target.result;
-            const lines = text.split('\n');
-            if (lines.length > 1) {
-                const headers = lines[0].split(',');
-                const fraudIdx = headers.indexOf('fraud_label');
-                if (fraudIdx > -1) {
-                    let total = 0;
-                    let fraudCount = 0;
-                    for (let i = 1; i < lines.length; i++) {
-                        if (lines[i].trim() === '') continue;
-                        const cols = lines[i].split(',');
-                        if (cols.length > fraudIdx) {
-                            total++;
-                            if (cols[fraudIdx].trim() === '1') {
-                                fraudCount++;
-                            }
-                        }
-                    }
-                    csvBatchResults = { total, fraud: fraudCount };
-                }
+            const claims = parseCsvToClaimInputs(e.target.result);
+            if (claims.length > 0) {
+                csvBatchResults = { claims, total: claims.length };
+                document.getElementById('fa-size').textContent =
+                    (f.size / 1024 / 1024).toFixed(2) + ' MB · ' + claims.length + ' records ready for batch scoring';
             }
         };
         reader.readAsText(f);
@@ -109,6 +156,51 @@ function removeFile() {
     document.getElementById('file-attached').style.display = 'none';
     document.getElementById('upload-zone').style.borderColor = '';
     document.getElementById('upload-zone').style.background = '';
+}
+
+// ==================== CLAIM INPUT BUILDER ====================
+function buildClaimInput() {
+    const idRaw = (document.getElementById('mot-id').value || '').replace(/\D/g, '');
+    const id = parseInt(idRaw) || (Math.floor(Math.random() * 999998) + 1);
+    const amount = parseFloat(document.getElementById('mot-amount').value) || 5000;
+    const prevClaims = parseInt(document.getElementById('mot-prev').value) || 0;
+    const daysSinceStart = parseInt(document.getElementById('mot-days').value) || 365;
+    const loc = (document.getElementById('mot-loc').value || '').toLowerCase();
+    const vehicleStr = (document.getElementById('mot-vehicle').value || '').toLowerCase();
+
+    const seniority = daysSinceStart / 365;
+    const area = (loc.includes('rural') || loc.includes('remote') || loc.includes('highway') || loc.includes('isolated')) ? 0 : 1;
+    const premium = Math.max(amount * 0.05, 300);
+    const valueVehicle = amount * 1.5;
+    const yearMatch = vehicleStr.match(/\b(19|20)\d{2}\b/);
+    const yearMatriculation = yearMatch ? parseInt(yearMatch[0]) : 2018;
+
+    const fmt = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    const now = new Date();
+    const startDate = new Date(now.getTime() - daysSinceStart * 86400000);
+
+    return {
+        ID: id,
+        Date_start_contract: fmt(startDate),
+        Date_last_renewal: fmt(startDate),
+        Date_next_renewal: fmt(new Date(startDate.getTime() + 365 * 86400000)),
+        Date_birth: fmt(new Date(now.getFullYear() - 38, 6, 15)),
+        Date_driving_licence: fmt(new Date(now.getFullYear() - 18, 3, 20)),
+        Date_lapse: null,
+        Seniority: parseFloat(seniority.toFixed(4)),
+        Policies_in_force: 1, Max_policies: 1, Max_products: 1,
+        Lapse: 0, Payment: 0, Distribution_channel: 1, Second_driver: 0,
+        Premium: parseFloat(premium.toFixed(2)),
+        Cost_claims_year: parseFloat(amount.toFixed(2)),
+        N_claims_year: 1,
+        N_claims_history: prevClaims + 1,
+        R_Claims_history: parseFloat(((prevClaims + 1) / Math.max(seniority, 0.5)).toFixed(4)),
+        Type_risk: 3, Area: area, Year_matriculation: yearMatriculation,
+        Power: 90, Cylinder_capacity: 1600,
+        Value_vehicle: parseFloat(valueVehicle.toFixed(2)),
+        N_doors: 4, Weight: 1200, Length: 4500, Type_fuel: 'P',
+        claim_records: null
+    };
 }
 
 // ==================== ANALYSIS ENGINE ====================
@@ -159,6 +251,31 @@ const BILLING_DATA = {
 function startAnalysis() {
     const type = selectedType;
     setState('analyzing');
+    apiResponsePromise = null;
+
+    if (csvBatchResults && csvBatchResults.claims && csvBatchResults.claims.length > 0) {
+        // Batch CSV → POST /predict/batch
+        apiResponsePromise = fetch(API_BASE + '/predict/batch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ claims: csvBatchResults.claims })
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => Promise.reject(new Error(e.detail || r.statusText)));
+            return r.json();
+        });
+    } else if (type === 'motor') {
+        // Single motor claim → POST /predict
+        const claimInput = buildClaimInput();
+        apiResponsePromise = fetch(API_BASE + '/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(claimInput)
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => Promise.reject(new Error(e.detail || r.statusText)));
+            return r.json();
+        });
+    }
+
     runSteps(type);
 }
 
@@ -195,7 +312,17 @@ function runSteps(type) {
             prev.querySelector('.astep-status').textContent = '✓';
         }
         if (idx >= steps.length) {
-            setTimeout(() => showResults(type), 500);
+            if (apiResponsePromise) {
+                apiResponsePromise
+                    .then(data => showResults(type, data))
+                    .catch(err => {
+                        console.error('API error:', err);
+                        showToast('API error — showing demo results: ' + err.message, 'danger');
+                        showResults(type, null);
+                    });
+            } else {
+                setTimeout(() => showResults(type, null), 500);
+            }
             return;
         }
         idx++;
@@ -208,33 +335,145 @@ function runSteps(type) {
     nextStep();
 }
 
-function showResults(type) {
-    const r = RESULTS[type] || RESULTS.medical;
+function showResults(type, apiResponse) {
     setState('results');
 
-    // Header
-    document.getElementById('res-claim-id').textContent = r.claimId;
-    document.getElementById('res-claim-meta').textContent = r.meta + ' · Analyzed ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const isBatch = apiResponse && apiResponse.results;
+    const isApiSingle = apiResponse && apiResponse.fraud_risk_score !== undefined;
 
-    // Risk Banner
-    const banner = document.getElementById('risk-banner');
+    if (isBatch) {
+        // ── BATCH results from API ──
+        const results = apiResponse.results;
+        const total = results.length;
+        const tc = { HIGH: 0, MEDIUM: 0, LOW: 0, VERY_LOW: 0 };
+        results.forEach(r => { tc[r.risk_tier] = (tc[r.risk_tier] || 0) + 1; });
+        const highCount = tc.HIGH || 0;
+        const medCount = tc.MEDIUM || 0;
+        const flagged = highCount + medCount;
+        const tierColor = t => t === 'HIGH' ? 'var(--red)' : t === 'MEDIUM' ? 'var(--orange)' : 'var(--green)';
 
-    if (csvBatchResults) {
-        document.getElementById('res-claim-meta').textContent = `Batch CSV Upload · Analyzed ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`;
         document.getElementById('res-claim-id').textContent = 'BATCH-ANALYSIS';
+        document.getElementById('res-claim-meta').textContent =
+            `Batch CSV Upload · ${total} claims · Analyzed ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`;
 
-        banner.className = 'risk-banner medium-banner';
-        document.getElementById('rb-score').textContent = csvBatchResults.fraud;
-        document.getElementById('rb-score').style.color = 'var(--red)';
-        document.getElementById('rb-tag').textContent = 'FRAUDULENT CLAIMS';
-        document.getElementById('rb-tag').style.color = 'var(--red)';
-        document.getElementById('rb-verdict').textContent = `Analyzed ${csvBatchResults.total} total vehicle insurance claims.`;
-        document.getElementById('rb-verdict-sub').textContent = `${csvBatchResults.fraud} high-risk fraudulent applications were detected in the batch.`;
+        const banner = document.getElementById('risk-banner');
+        banner.className = 'risk-banner' + (highCount > 0 ? '' : medCount > 0 ? ' medium-banner' : ' low-banner');
+        const mainColor = highCount > 0 ? 'var(--red)' : medCount > 0 ? 'var(--orange)' : 'var(--green)';
+        document.getElementById('rb-score').textContent = flagged;
+        document.getElementById('rb-score').style.color = mainColor;
+        document.getElementById('rb-tag').textContent = 'SUSPICIOUS CLAIMS';
+        document.getElementById('rb-tag').style.color = mainColor;
+        document.getElementById('rb-verdict').textContent =
+            `${highCount} HIGH + ${medCount} MEDIUM risk claims detected out of ${total}`;
+        document.getElementById('rb-verdict-sub').textContent =
+            `${tc.LOW || 0} LOW risk · ${tc.VERY_LOW || 0} VERY LOW risk · ${Math.round((flagged / total) * 100)}% flagged rate`;
+        document.getElementById('aec-risk-level').textContent = highCount > 0 ? 'HIGH RISK' : 'MEDIUM RISK';
 
-        const p = Math.round((csvBatchResults.fraud / csvBatchResults.total) * 100) || 0;
-        document.getElementById('aec-risk-level').textContent = 'HIGH RISK';
-        document.getElementById('aec-body').innerHTML = `Batch analysis completed on <strong>${csvBatchResults.total} records</strong>. We found <strong>${csvBatchResults.fraud}</strong> fraudulent claims, representing <strong>${p}%</strong> of the total dataset. <strong>Recommendation: Route flagged cases to SIU team for immediate review.</strong>`;
+        const topClaims = results
+            .filter(r => r.risk_tier === 'HIGH' || r.risk_tier === 'MEDIUM')
+            .sort((a, b) => b.fraud_risk_score - a.fraud_risk_score)
+            .slice(0, 10);
+        document.getElementById('aec-body').innerHTML =
+            `<strong>Batch of ${total} claims scored by the AI ensemble.</strong> Risk breakdown: ` +
+            `<span style="color:var(--red)">${highCount} HIGH</span>, ` +
+            `<span style="color:var(--orange)">${medCount} MEDIUM</span>, ` +
+            `<span>${(tc.LOW || 0) + (tc.VERY_LOW || 0)} LOW/VERY LOW</span>.` +
+            (topClaims.length > 0 ? `<br><br><strong>Top suspicious claims:</strong>` +
+            `<table style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.8rem">` +
+            `<thead><tr style="border-bottom:1px solid var(--border)">` +
+            `<th style="text-align:left;padding:0.3rem 0.5rem">Policy ID</th>` +
+            `<th style="text-align:left;padding:0.3rem 0.5rem">Fraud Risk %</th>` +
+            `<th style="text-align:left;padding:0.3rem 0.5rem">Risk Tier</th></tr></thead><tbody>` +
+            topClaims.map(r =>
+                `<tr><td style="padding:0.3rem 0.5rem;font-family:monospace">${r.ID}</td>` +
+                `<td style="padding:0.3rem 0.5rem;color:${tierColor(r.risk_tier)}">${(r.fraud_risk_score * 100).toFixed(1)}%</td>` +
+                `<td style="padding:0.3rem 0.5rem;color:${tierColor(r.risk_tier)};font-weight:600">${r.risk_tier}</td></tr>`
+            ).join('') + `</tbody></table>` : '') +
+            `<br><strong>Recommendation: Route all HIGH risk cases to SIU for immediate review.</strong>`;
+
+        setModuleScore('mot', Math.round((flagged / total) * 100),
+            `${flagged} of ${total} flagged`, highCount > 0 ? 'red' : 'orange');
+
+    } else if (isApiSingle) {
+        // ── SINGLE motor prediction from API ──
+        const r = apiResponse;
+        const riskPct = Math.round(r.fraud_risk_score * 100);
+        const claimId = document.getElementById('mot-id')?.value || 'MOT-2026-0001';
+        const claimantName = document.getElementById('mot-name')?.value || 'Unknown';
+        const vehicleMake = document.getElementById('mot-vehicle')?.value || 'Motor Vehicle';
+        const prevClaims = parseInt(document.getElementById('mot-prev')?.value) || 0;
+        const daysSinceStart = parseInt(document.getElementById('mot-days')?.value) || 365;
+        const policeReport = document.getElementById('mot-police')?.value || 'no';
+
+        document.getElementById('res-claim-id').textContent = claimId;
+        document.getElementById('res-claim-meta').textContent =
+            `Motor Insurance · ${claimantName} · ${vehicleMake} · Analyzed ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`;
+
+        const tierConfig = {
+            HIGH:     { cls: '',              color: 'var(--red)',    tag: 'HIGH RISK' },
+            MEDIUM:   { cls: ' medium-banner', color: 'var(--orange)', tag: 'MEDIUM RISK' },
+            LOW:      { cls: ' low-banner',   color: 'var(--green)',  tag: 'LOW RISK' },
+            VERY_LOW: { cls: ' low-banner',   color: 'var(--green)',  tag: 'VERY LOW RISK' }
+        };
+        const tcfg = tierConfig[r.risk_tier] || tierConfig.LOW;
+        document.getElementById('risk-banner').className = 'risk-banner' + tcfg.cls;
+        document.getElementById('rb-score').textContent = riskPct;
+        document.getElementById('rb-score').style.color = tcfg.color;
+        document.getElementById('rb-tag').textContent = tcfg.tag;
+        document.getElementById('rb-tag').style.color = tcfg.color;
+        document.getElementById('rb-verdict').textContent =
+            r.risk_tier === 'HIGH'   ? `ML ensemble flagged this claim as HIGH risk (${riskPct}% fraud probability)` :
+            r.risk_tier === 'MEDIUM' ? `Motor claim shows moderate fraud indicators (${riskPct}% fraud probability)` :
+                                       `Motor claim appears low risk (${riskPct}% fraud probability)`;
+        document.getElementById('rb-verdict-sub').textContent =
+            `Ensemble anomaly score ${Math.round(r.ensemble_anomaly_score * 100)}/100 — ` +
+            (r.risk_tier === 'HIGH'   ? 'multiple behavioral signals detected. Immediate investigation recommended.' :
+             r.risk_tier === 'MEDIUM' ? 'some anomalies present. Further review recommended.' :
+                                        'no major red flags detected. Standard processing.');
+        document.getElementById('aec-risk-level').textContent = tcfg.tag;
+        document.getElementById('aec-body').innerHTML =
+            `This motor claim was scored by our <strong>4-model AI ensemble</strong>:` +
+            `<ul style="margin:0.5rem 0 0.5rem 1.2rem;line-height:1.9">` +
+            `<li><strong>Isolation Forest anomaly:</strong> ${(r.iso_score * 100).toFixed(1)}/100</li>` +
+            `<li><strong>Local Outlier Factor:</strong> ${(r.lof_score * 100).toFixed(1)}/100</li>` +
+            `<li><strong>Autoencoder reconstruction error:</strong> ${(r.ae_score * 100).toFixed(1)}/100</li>` +
+            `<li><strong>Ensemble anomaly score:</strong> ${(r.ensemble_anomaly_score * 100).toFixed(1)}/100</li>` +
+            `<li><strong>Calibrated RF P(fraud):</strong> <span style="color:${tcfg.color};font-weight:700">${riskPct}%</span></li>` +
+            `</ul>` +
+            (prevClaims >= 3 ? `<strong>⚠️ ${prevClaims} previous claims in 3 years</strong> — significantly above national average.<br>` : '') +
+            (daysSinceStart <= 30 ? `<strong>⚠️ Policy active only ${daysSinceStart} days</strong> — early claim filing indicator.<br>` : '') +
+            (policeReport === 'no' ? `<strong>⚠️ No police report filed</strong> — unusual for significant damage claim.<br>` : '') +
+            `<br><strong>Recommendation: ` +
+            (r.risk_tier === 'HIGH'   ? 'Escalate to SIU for immediate investigation.' :
+             r.risk_tier === 'MEDIUM' ? 'Assign to adjuster for detailed review before payout.' :
+                                        'Standard processing — no immediate action required.') +
+            `</strong>`;
+
+        setModuleScore('mot', riskPct, tcfg.tag, r.risk_tier === 'HIGH' ? 'red' : r.risk_tier === 'MEDIUM' ? 'orange' : 'green');
+
+        // Populate motor signals list with real data + API sub-scores
+        const signals = [];
+        if (prevClaims >= 3) signals.push({ cls: 'high', icon: 'alert-triangle', title: `${prevClaims} Previous Claims in 3 Years`, body: 'Above average claim frequency — behavioral fraud indicator.' });
+        if (daysSinceStart <= 30) signals.push({ cls: 'high', icon: 'clock', title: `Policy Active Only ${daysSinceStart} Days`, body: 'Early claim filing after recent activation — staged fraud signal.' });
+        if (policeReport === 'no') signals.push({ cls: 'medium', icon: 'file-x', title: 'No Police Report Filed', body: 'Significant damage claimed without official incident documentation.' });
+        const scoreClass = s => s > 0.7 ? 'high' : s > 0.5 ? 'medium' : 'low';
+        signals.push({ cls: scoreClass(r.iso_score),          icon: 'bar-chart-2',    title: `Isolation Forest: ${(r.iso_score * 100).toFixed(1)}/100`,          body: 'Statistical outlier detection vs. reference policy portfolio.' });
+        signals.push({ cls: scoreClass(r.lof_score),          icon: 'git-branch',     title: `Local Outlier Factor: ${(r.lof_score * 100).toFixed(1)}/100`,         body: 'Local density-based anomaly score compared to similar policies.' });
+        signals.push({ cls: scoreClass(r.ae_score),           icon: 'cpu',            title: `Autoencoder Score: ${(r.ae_score * 100).toFixed(1)}/100`,             body: 'Neural network reconstruction error — measures profile unusualness.' });
+        signals.push({ cls: scoreClass(r.ensemble_anomaly_score), icon: 'layers',     title: `Ensemble Anomaly: ${(r.ensemble_anomaly_score * 100).toFixed(1)}/100`, body: 'Mean of all three unsupervised anomaly detector scores.' });
+        const sl = document.getElementById('signals-list');
+        if (sl) sl.innerHTML = signals.map(s =>
+            `<div class="sig-item ${s.cls}"><i data-lucide="${s.icon}"></i>` +
+            `<div><strong>${s.title}</strong><p>${s.body}</p></div></div>`
+        ).join('');
+
     } else {
+        // ── FALLBACK demo data ──
+        const r = RESULTS[type] || RESULTS.motor;
+        document.getElementById('res-claim-id').textContent = r.claimId;
+        document.getElementById('res-claim-meta').textContent =
+            r.meta + ' · Analyzed ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        const banner = document.getElementById('risk-banner');
         banner.className = 'risk-banner' + (r.overallScore >= 70 ? '' : r.overallScore >= 40 ? ' medium-banner' : ' low-banner');
         const scoreColor = r.overallScore >= 70 ? 'var(--red)' : r.overallScore >= 40 ? 'var(--orange)' : 'var(--green)';
         document.getElementById('rb-score').textContent = r.overallScore;
@@ -243,43 +482,9 @@ function showResults(type) {
         document.getElementById('rb-tag').style.color = scoreColor;
         document.getElementById('rb-verdict').textContent = r.verdict;
         document.getElementById('rb-verdict-sub').textContent = r.verdictSub;
-        // AI Explanation
         document.getElementById('aec-risk-level').textContent = r.overallTag;
         document.getElementById('aec-body').innerHTML = r.aiText;
-    }
-
-    // Module scores
-    setModuleScore('med', r.medScore, r.medRisk, 'red');
-    setModuleScore('mot', r.motScore, r.motRisk, r.motScore >= 70 ? 'red' : 'orange');
-    setModuleScore('doc', r.docScore, r.docRisk, r.docScore >= 70 ? 'red' : 'blue');
-
-    // Show/hide modules based on type
-    const showMed = type === 'medical';
-    const showMot = type === 'motor';
-    const showDoc = type === 'document';
-    document.getElementById('mod-medical').style.display = showMed ? 'block' : (type === 'medical' ? 'block' : 'block');
-    // Always show all 3 modules in results
-
-    // Build billing table for medical
-    const tbody = document.getElementById('billing-rows');
-    const rows = BILLING_DATA[type] || BILLING_DATA.medical;
-    tbody.innerHTML = rows.map(row => `
-    <tr class="${row.status === 'FRAUD' || row.status === 'PHANTOM' ? 'fraud-row' : ''}">
-      <td>${row.service}</td>
-      <td>${row.official}</td>
-      <td><strong>${row.billed}</strong></td>
-      <td class="${row.cls}">${row.diff}</td>
-      <td><span class="${row.badge}">${row.status}</span></td>
-    </tr>
-  `).join('');
-
-    // Document timeline dates
-    if (type === 'document') {
-        const start = document.getElementById('doc-start')?.value || '2026-02-16';
-        const claim = document.getElementById('doc-claim')?.value || '2026-02-19';
-        const fmt = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        document.getElementById('tm-start').textContent = fmt(start);
-        document.getElementById('tm-claim').textContent = fmt(claim);
+        setModuleScore('mot', r.motScore, r.motRisk, r.motScore >= 70 ? 'red' : 'orange');
     }
 
     lucide.createIcons();

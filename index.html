@@ -264,7 +264,7 @@
                             <li><i data-lucide="check-circle"></i> Upcoding &amp; phantom billing detection</li>
                             <li><i data-lucide="check-circle"></i> Hospital database cross-reference</li>
                         </ul>
-                        <button class="lp-mod-btn" onclick="enterApp('medical')">See Live Demo &rarr;</button>
+                        <button class="lp-mod-btn" onclick="enterApp('motor')">See Live Demo &rarr;</button>
                     </div>
                     <div class="lp-mod-card">
                         <div class="lp-mod-badge lmb-orange">MODULE 02</div>
@@ -290,7 +290,7 @@
                             <li><i data-lucide="check-circle"></i> Identity document verification</li>
                             <li><i data-lucide="check-circle"></i> PDF metadata anomaly detection</li>
                         </ul>
-                        <button class="lp-mod-btn" onclick="enterApp('document')">See Live Demo &rarr;</button>
+                        <button class="lp-mod-btn" onclick="enterApp('motor')">See Live Demo &rarr;</button>
                     </div>
                 </div>
             </div>
@@ -496,13 +496,8 @@
                             <div class="claim-type-section">
                                 <div class="claim-type-label">Select Claim Type</div>
                                 <div class="claim-type-pills">
-                                    <button class="ctp active" data-type="medical"
-                                        onclick="selectClaimType('medical')"><i data-lucide="stethoscope"></i>
-                                        Medical</button>
-                                    <button class="ctp" data-type="motor" onclick="selectClaimType('motor')"><i
+                                    <button class="ctp active" data-type="motor" onclick="selectClaimType('motor')"><i
                                             data-lucide="car"></i> Motor Vehicle</button>
-                                    <button class="ctp" data-type="document" onclick="selectClaimType('document')"><i
-                                            data-lucide="file-search"></i> Policy / Document</button>
                                 </div>
                             </div>
                         </div>
@@ -512,31 +507,8 @@
                             <div class="claim-form-card">
                                 <div class="cfc-header"><i data-lucide="clipboard-list"></i> Claim Details</div>
 
-                                <!-- MEDICAL FIELDS -->
-                                <div id="fields-medical" class="form-fields active">
-                                    <div class="ff-row2">
-                                        <div class="ff"><label>Claim ID</label><input type="text" id="m-claim-id"
-                                                placeholder="e.g. MED-2026-4521" value="MED-2026-4521"></div>
-                                        <div class="ff"><label>Patient Name</label><input type="text" id="m-patient"
-                                                placeholder="Full name" value="John Doe"></div>
-                                    </div>
-                                    <div class="ff"><label>Hospital / Provider</label><input type="text" id="m-hospital"
-                                            placeholder="Hospital name" value="City General Medical Center"></div>
-                                    <div class="ff-row2">
-                                        <div class="ff"><label>Total Billed Amount ($)</label><input type="number"
-                                                id="m-amount" placeholder="0.00" value="10307"></div>
-                                        <div class="ff"><label>Insurance Policy ID</label><input type="text"
-                                                id="m-policy" placeholder="Policy number" value="POL-HLT-9921-A"></div>
-                                    </div>
-                                    <div class="ff"><label>Procedures / Diagnosis Codes</label><input type="text"
-                                            id="m-codes" placeholder="e.g. 99285, 72148, 27447"
-                                            value="99285, 72148, Surgical Suite"></div>
-                                    <div class="ff"><label>Date of Service</label><input type="date" id="m-date"
-                                            value="2026-02-22"></div>
-                                </div>
-
                                 <!-- MOTOR FIELDS -->
-                                <div id="fields-motor" class="form-fields">
+                                <div id="fields-motor" class="form-fields active">
                                     <div class="ff-row2">
                                         <div class="ff"><label>Claim ID</label><input type="text" id="mot-id"
                                                 placeholder="e.g. MOT-2026-1832" value="MOT-2026-1832"></div>
@@ -571,28 +543,7 @@
                                     </div>
                                 </div>
 
-                                <!-- DOCUMENT FIELDS -->
-                                <div id="fields-document" class="form-fields">
-                                    <div class="ff-row2">
-                                        <div class="ff"><label>Policy Number</label><input type="text" id="doc-policy"
-                                                placeholder="Policy number" value="FL-9910-RKS-2026"></div>
-                                        <div class="ff"><label>Policy Holder Name</label><input type="text"
-                                                id="doc-holder" placeholder="Full name" value="Rajesh Kumar Sharma">
-                                        </div>
-                                    </div>
-                                    <div class="ff-row2">
-                                        <div class="ff"><label>Policy Activation Date</label><input type="date"
-                                                id="doc-start" value="2026-02-16"></div>
-                                        <div class="ff"><label>Claim Submission Date</label><input type="date"
-                                                id="doc-claim" value="2026-02-19"></div>
-                                    </div>
-                                    <div class="ff"><label>Identity Document (Aadhaar / Passport /
-                                            License)</label><input type="text" id="doc-id"
-                                            placeholder="Document ID number" value="Aadhaar: XXXX-XXXX-9821"></div>
-                                    <div class="ff"><label>Claim Description</label><textarea id="doc-desc"
-                                            placeholder="Briefly describe the claim...">Vehicle total loss claim submitted 3 days after policy purchase. Remote location, no police report.</textarea>
-                                    </div>
-                                </div>
+
                             </div>
 
                             <button class="analyze-btn" id="analyze-btn" onclick="startAnalysis()">
@@ -691,41 +642,6 @@
                     <!-- Module results grid -->
                     <div class="module-results-grid">
 
-                        <!-- Medical Module Result -->
-                        <div class="module-result-card" id="mod-medical">
-                            <div class="mrc-header">
-                                <div class="mrc-icon red"><i data-lucide="stethoscope"></i></div>
-                                <div>
-                                    <div class="mrc-label">Medical Fraud Module</div>
-                                    <div class="mrc-score-row"><span class="mrc-score" id="med-score">87</span><span
-                                            class="mrc-risk red-text" id="med-risk">HIGH RISK</span></div>
-                                </div>
-                                <div class="mrc-bar-wrap">
-                                    <div class="mrc-bar red-bar" id="med-bar" style="width:87%"></div>
-                                </div>
-                            </div>
-                            <div class="billing-table-wrap">
-                                <table class="billing-table" id="billing-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Service / Procedure</th>
-                                            <th>Official Price</th>
-                                            <th>Billed Price</th>
-                                            <th>Difference</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="billing-rows"></tbody>
-                                </table>
-                            </div>
-                            <div class="mrc-finding red-finding" id="med-finding">
-                                <i data-lucide="alert-circle"></i>
-                                <div><strong>Emergency Visit billed at 5.5× official rate. MRI inflated by 462%. $1,800
-                                        phantom surgical charge detected.</strong><br><span>Total suspected overcharge:
-                                        <strong class="red-text">$7,220</strong></span></div>
-                            </div>
-                        </div>
-
                         <!-- Motor Module Result -->
                         <div class="module-result-card" id="mod-motor">
                             <div class="mrc-header">
@@ -759,59 +675,6 @@
                                 <div class="sig-item medium"><i data-lucide="file-x"></i>
                                     <div><strong>No Police Report Filed</strong>
                                         <p>Significant damage claimed but no official incident report exists.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Document Module Result -->
-                        <div class="module-result-card" id="mod-document">
-                            <div class="mrc-header">
-                                <div class="mrc-icon blue"><i data-lucide="file-search"></i></div>
-                                <div>
-                                    <div class="mrc-label">Document &amp; Policy Module</div>
-                                    <div class="mrc-score-row"><span class="mrc-score" id="doc-score">91</span><span
-                                            class="mrc-risk red-text" id="doc-risk">HIGH RISK</span></div>
-                                </div>
-                                <div class="mrc-bar-wrap">
-                                    <div class="mrc-bar blue-bar" id="doc-bar" style="width:91%"></div>
-                                </div>
-                            </div>
-                            <div class="timeline-mini" id="timeline-mini">
-                                <div class="tm-event blue-ev">
-                                    <div class="tm-dot"></div>
-                                    <div class="tm-info"><strong>Policy Activated</strong><span id="tm-start">Feb 16,
-                                            2026</span></div>
-                                </div>
-                                <div class="tm-line">
-                                    <div class="tm-line-fill" style="width:20%"></div>
-                                    <div class="tm-gap-badge">3 DAYS</div>
-                                </div>
-                                <div class="tm-event red-ev">
-                                    <div class="tm-dot"></div>
-                                    <div class="tm-info"><strong class="red-text">Claim Filed</strong><span
-                                            id="tm-claim">Feb 19, 2026</span></div>
-                                </div>
-                                <div class="tm-line gray"></div>
-                                <div class="tm-event gray-ev">
-                                    <div class="tm-dot"></div>
-                                    <div class="tm-info"><strong>Avg. Normal Gap</strong><span>247 days</span></div>
-                                </div>
-                            </div>
-                            <div class="doc-anomalies" id="doc-anomalies">
-                                <div class="doc-anm red-anm"><i data-lucide="alert-triangle"></i>
-                                    <div><strong>Claim filed 3 days after policy purchase</strong>
-                                        <p>Top 2% nationally of suspicious submission timing.</p>
-                                    </div>
-                                </div>
-                                <div class="doc-anm orange-anm"><i data-lucide="user-x"></i>
-                                    <div><strong>Identity document mismatch</strong>
-                                        <p>Policy holder name does not match Aadhaar photo metadata.</p>
-                                    </div>
-                                </div>
-                                <div class="doc-anm orange-anm"><i data-lucide="file-x"></i>
-                                    <div><strong>PDF metadata tampering</strong>
-                                        <p>Document creation date precedes the stated incident date by 1 day.</p>
                                     </div>
                                 </div>
                             </div>

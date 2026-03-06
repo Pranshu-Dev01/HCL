@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraudLens AI – Insurance Fraud Detection Platform</title>
+    <meta name="description"
+        content="Upload any insurance claim and our AI instantly detects fraud across medical, motor, and document types.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+</head>
+
+<body>
+
+    <!-- LANDING PAGE -->
+    <div id="landing-page">
+
+        <!-- Navbar -->
+        <nav class="lnav">
+            <div class="lnav-inner">
+                <div class="lnav-logo">
+                    <div class="lnav-logo-icon"><i data-lucide="shield-check"></i></div><span>FraudLens
+                        <strong>AI</strong></span>
+                </div>
+                <div class="lnav-links">
+                    <a href="#lp-features">Solutions</a>
+                    <a href="#lp-modules">Modules</a>
+                    <a href="#lp-how">How It Works</a>
+                    <a href="#lp-stats">ROI &amp; Results</a>
+                    <a href="#lp-pricing">Pricing</a>
+                    <a href="../../insurance-fraud-platform/insurance-fraud-platform/dist/index.html">Dashboard</a>
+                </div>
+                <div class="lnav-right">
+                    <button class="lnav-signin" onclick="enterApp()">Sign In</button>
+                    <button class="lnav-cta" onclick="enterApp()">Book a Demo &rarr;</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="lp-hero">
+            <div class="lp-hero-inner">
+                <div class="lp-hero-left">
+                    <div class="lp-eyebrow"><i data-lucide="building-2"></i> Built for Enterprise Insurance Carriers
+                    </div>
+                    <h1 class="lp-h1">AI Fraud Detection<br>for <span class="lp-h1-accent">Insurance Carriers</span>
+                    </h1>
+                    <p class="lp-hero-desc">FraudLens AI gives fraud directors, claims managers, and SIU teams a unified
+                        platform to detect medical billing fraud, motor claim abuse, and document forgery &mdash; with
+                        AI that every investigator and regulator can trust.</p>
+                    <div class="lp-btns">
+                        <button class="lp-btn-primary" onclick="enterApp()"><i data-lucide="calendar"></i> Book a
+                            Demo</button>
+                        <button class="lp-btn-outline" onclick="enterApp()"><i data-lucide="layout-dashboard"></i> Try
+                            the Platform</button>
+                    </div>
+                    <div class="lp-enterprise-trust">
+                        <div class="et-label">Trusted by leading insurance carriers</div>
+                        <div class="et-logos">
+                            <span class="et-logo">InsureGuard</span>
+                            <span class="et-logo">Claimsure Pro</span>
+                            <span class="et-logo">RiskShield</span>
+                            <span class="et-logo">PolicyAI Corp</span>
+                            <span class="et-logo">SecureClaims</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lp-hero-right">
+                    <div class="lp-dashboard-preview">
+                        <div class="preview-bar">
+                            <div class="preview-dots"><span></span><span></span><span></span></div><span
+                                class="preview-url">fraudlens.ai / analyze</span>
+                        </div>
+                        <div class="preview-body">
+                            <div class="prev-kpis">
+                                <div class="prev-kpi prev-blue">
+                                    <div class="prev-kpi-num">12,842</div>
+                                    <div class="prev-kpi-lbl">Claims</div>
+                                </div>
+                                <div class="prev-kpi prev-red">
+                                    <div class="prev-kpi-num">86</div>
+                                    <div class="prev-kpi-lbl">High Risk</div>
+                                </div>
+                                <div class="prev-kpi prev-orange">
+                                    <div class="prev-kpi-num">438</div>
+                                    <div class="prev-kpi-lbl">Medium</div>
+                                </div>
+                                <div class="prev-kpi prev-green">
+                                    <div class="prev-kpi-num">152</div>
+                                    <div class="prev-kpi-lbl">Pending</div>
+                                </div>
+                            </div>
+                            <div class="prev-chart-area">
+                                <div class="prev-bar" style="height:40%"></div>
+                                <div class="prev-bar" style="height:65%"></div>
+                                <div class="prev-bar" style="height:55%"></div>
+                                <div class="prev-bar" style="height:82%"></div>
+                                <div class="prev-bar" style="height:70%"></div>
+                                <div class="prev-bar" style="height:90%"></div>
+                                <div class="prev-bar" style="height:75%"></div>
+                                <div class="prev-bar" style="height:95%"></div>
+                            </div>
+                            <div class="prev-alerts">
+                                <div class="prev-alert-item prev-red"><i data-lucide="shield-x"></i> HIGH RISK &mdash;
+                                    MED-2026-4521 &middot; Score: 80</div>
+                                <div class="prev-alert-item prev-orange"><i data-lucide="shield-alert"></i> MEDIUM RISK
+                                    &mdash; MOT-2026-1832 &middot; Score: 55</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Security badges -->
+                <div class="hero-badges">
+                    <span class="sec-badge"><i data-lucide="lock"></i> SOC 2 Type II</span>
+                    <span class="sec-badge"><i data-lucide="shield"></i> ISO 27001</span>
+                    <span class="sec-badge"><i data-lucide="check-circle"></i> GDPR Compliant</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Band (ROI first) -->
+        <section class="lp-stats-band" id="lp-stats">
+            <div class="lp-inner">
+                <div class="lp-stat-item">
+                    <div class="lp-stat-num">9.2&times;</div>
+                    <div class="lp-stat-lbl">Avg. ROI for Enterprise Clients</div>
+                </div>
+                <div class="lp-stat-div"></div>
+                <div class="lp-stat-item">
+                    <div class="lp-stat-num">98.7%</div>
+                    <div class="lp-stat-lbl">Fraud Detection Accuracy</div>
+                </div>
+                <div class="lp-stat-div"></div>
+                <div class="lp-stat-item">
+                    <div class="lp-stat-num">$2.4B+</div>
+                    <div class="lp-stat-lbl">Fraud Prevented Annually</div>
+                </div>
+                <div class="lp-stat-div"></div>
+                <div class="lp-stat-item">
+                    <div class="lp-stat-num">60%</div>
+                    <div class="lp-stat-lbl">Reduction in Investigator Workload</div>
+                </div>
+                <div class="lp-stat-div"></div>
+                <div class="lp-stat-item">
+                    <div class="lp-stat-num">50+</div>
+                    <div class="lp-stat-lbl">Insurance Carrier Clients</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="lp-section" id="lp-features">
+            <div class="lp-inner">
+                <div class="lp-section-hd">
+                    <div class="lp-section-eyebrow">ENTERPRISE SOLUTIONS</div>
+                    <h2 class="lp-section-h2">Everything Your Fraud &amp; Risk Team Needs<br>in a Single Platform</h2>
+                    <p class="lp-section-sub">Designed for fraud directors, claims managers, SIU investigators, and risk
+                        officers at mid-to-large insurance carriers.</p>
+                </div>
+                <div class="lp-features-grid">
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon lfi-blue"><i data-lucide="cpu"></i></div>
+                        <h3>Regulator-Defensible AI</h3>
+                        <p>Every decision comes with a plain-English explanation — audit-ready, compliant, and
+                            presentable to IRDAI, FCA, and internal legal teams.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon lfi-green"><i data-lucide="trending-up"></i></div>
+                        <h3>9.2× Average ROI</h3>
+                        <p>Enterprise clients reduce fraudulent payouts by 30–45% within the first two quarters, with
+                            investigator workload cut by up to 60%.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon lfi-red"><i data-lucide="gauge"></i></div>
+                        <h3>Unified Risk Score</h3>
+                        <p>Medical, motor, and document signals merge into a single score — eliminating siloed tools and
+                            duplicated analyst workflows across departments.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon lfi-orange"><i data-lucide="plug"></i></div>
+                        <h3>API-First &amp; CMS-Ready</h3>
+                        <p>REST &amp; webhook APIs integrate into Guidewire, Duck Creek, and Majesco in under 2 weeks.
+                            No rip-and-replace of existing systems.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon lfi-indigo"><i data-lucide="users"></i></div>
+                        <h3>Multi-Team Workflows</h3>
+                        <p>Role-based access for SIU investigators, claims adjusters, fraud directors, and compliance —
+                            each team sees exactly what they need.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon lfi-teal"><i data-lucide="lock"></i></div>
+                        <h3>Enterprise Security</h3>
+                        <p>SOC 2 Type II certified, end-to-end encrypted, on-premise deployment available. GDPR and
+                            IRDAI compliant out of the box.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="lp-section lp-gray" id="lp-how">
+            <div class="lp-inner">
+                <div class="lp-section-hd">
+                    <div class="lp-section-eyebrow">HOW IT WORKS</div>
+                    <h2 class="lp-section-h2">From Claim Submission<br>to Fraud Decision in Milliseconds</h2>
+                </div>
+                <div class="lp-how-steps">
+                    <div class="lp-how-step">
+                        <div class="lp-how-num">01</div>
+                        <div class="lp-how-icon"><i data-lucide="upload-cloud"></i></div>
+                        <h4>Upload Your Claim</h4>
+                        <p>Upload any insurance claim — hospital bill, accident report, or policy document.</p>
+                    </div>
+                    <div class="lp-how-arrow"><i data-lucide="arrow-right"></i></div>
+                    <div class="lp-how-step">
+                        <div class="lp-how-num">02</div>
+                        <div class="lp-how-icon"><i data-lucide="git-branch"></i></div>
+                        <h4>AI Analyzes It</h4>
+                        <p>Three specialized modules run simultaneously — medical billing, motor behavior, and document
+                            metadata.</p>
+                    </div>
+                    <div class="lp-how-arrow"><i data-lucide="arrow-right"></i></div>
+                    <div class="lp-how-step">
+                        <div class="lp-how-num">03</div>
+                        <div class="lp-how-icon"><i data-lucide="gauge"></i></div>
+                        <h4>Risk Score &amp; Insights</h4>
+                        <p>A unified Fraud Risk Score is generated with a full AI explanation of every suspicious
+                            signal.</p>
+                    </div>
+                    <div class="lp-how-arrow"><i data-lucide="arrow-right"></i></div>
+                    <div class="lp-how-step">
+                        <div class="lp-how-num">04</div>
+                        <div class="lp-how-icon"><i data-lucide="user-check"></i></div>
+                        <h4>Take Action</h4>
+                        <p>Approve, escalate to investigators, or reject — all from one clean decision screen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modules -->
+        <section class="lp-section" id="lp-modules">
+            <div class="lp-inner">
+                <div class="lp-section-hd">
+                    <div class="lp-section-eyebrow">DETECTION MODULES</div>
+                    <h2 class="lp-section-h2">Three AI Modules.<br>One Unified Fraud Decision.</h2>
+                </div>
+                <div class="lp-modules-row">
+                    <div class="lp-mod-card">
+                        <div class="lp-mod-badge lmb-red">MODULE 01</div>
+                        <div class="lp-mod-icon lmi-red"><i data-lucide="stethoscope"></i></div>
+                        <h3>Medical Insurance Fraud</h3>
+                        <p>Verifies hospital bills line by line against official pricing databases. Detects upcoding,
+                            phantom procedures, and inflated charges automatically.</p>
+                        <ul>
+                            <li><i data-lucide="check-circle"></i> Bill-vs-official price comparison</li>
+                            <li><i data-lucide="check-circle"></i> Upcoding &amp; phantom billing detection</li>
+                            <li><i data-lucide="check-circle"></i> Hospital database cross-reference</li>
+                        </ul>
+                        <button class="lp-mod-btn" onclick="enterApp('medical')">See Live Demo &rarr;</button>
+                    </div>
+                    <div class="lp-mod-card">
+                        <div class="lp-mod-badge lmb-orange">MODULE 02</div>
+                        <div class="lp-mod-icon lmi-orange"><i data-lucide="car"></i></div>
+                        <h3>Motor Insurance Fraud</h3>
+                        <p>A Random Forest model trained on 15+ behavioral features identifies suspicious vehicle claims
+                            with SMOTE class-balancing for high accuracy.</p>
+                        <ul>
+                            <li><i data-lucide="check-circle"></i> Random Forest ML classification</li>
+                            <li><i data-lucide="check-circle"></i> Claim frequency &amp; timing analysis</li>
+                            <li><i data-lucide="check-circle"></i> Location &amp; witness pattern detection</li>
+                        </ul>
+                        <button class="lp-mod-btn" onclick="enterApp('motor')">See Live Demo &rarr;</button>
+                    </div>
+                    <div class="lp-mod-card">
+                        <div class="lp-mod-badge lmb-blue">MODULE 03</div>
+                        <div class="lp-mod-icon lmi-blue"><i data-lucide="file-search"></i></div>
+                        <h3>Document &amp; Policy Fraud</h3>
+                        <p>Analyzes policy timelines, identity document metadata, and form data to catch staged and
+                            pre-planned insurance fraud before payout.</p>
+                        <ul>
+                            <li><i data-lucide="check-circle"></i> Policy-to-claim timeline analysis</li>
+                            <li><i data-lucide="check-circle"></i> Identity document verification</li>
+                            <li><i data-lucide="check-circle"></i> PDF metadata anomaly detection</li>
+                        </ul>
+                        <button class="lp-mod-btn" onclick="enterApp('document')">See Live Demo &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="lp-section lp-gray">
+            <div class="lp-inner">
+                <div class="lp-section-hd">
+                    <div class="lp-section-eyebrow">CUSTOMER SUCCESS</div>
+                    <h2 class="lp-section-h2">Trusted by Fraud Teams<br>at Leading Carriers</h2>
+                </div>
+                <div class="lp-testimonial-wrap">
+                    <div class="lp-testimonial">
+                        <div class="lt-quote">&ldquo;FraudLens AI reduced our fraudulent payout rate by 38% in the first
+                            quarter. The explainable scores make it easy for our SIU team to prioritize cases and
+                            present findings to legal without additional analysis work.&rdquo;</div>
+                        <div class="lt-author">
+                            <div class="lt-avatar">AK</div>
+                            <div>
+                                <div class="lt-name">Anish Kapoor</div>
+                                <div class="lt-role">Director of Fraud Prevention &mdash; InsureGuard Group</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lp-testimonial">
+                        <div class="lt-quote">&ldquo;We integrated FraudLens via REST API into Guidewire in under 10
+                            days. Real-time fraud scores are now embedded in every claim workflow &mdash; our adjusters
+                            have full AI context before they pick up the phone.&rdquo;</div>
+                        <div class="lt-author">
+                            <div class="lt-avatar">SR</div>
+                            <div>
+                                <div class="lt-name">Sonia Rajan</div>
+                                <div class="lt-role">VP Technology &amp; Claims Systems &mdash; RiskShield Insurance
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section class="lp-section" id="lp-pricing">
+            <div class="lp-inner">
+                <div class="lp-section-hd">
+                    <div class="lp-section-eyebrow">ENTERPRISE PLANS</div>
+                    <h2 class="lp-section-h2">Transparent Pricing for<br>Every Stage of Growth</h2>
+                    <p class="lp-section-sub">All plans include all three AI detection modules, dedicated onboarding,
+                        and SLA-backed uptime guarantees.</p>
+                </div>
+                <div class="lp-pricing-grid">
+                    <div class="lp-price-card">
+                        <div class="lp-price-tier">Starter</div>
+                        <div class="lp-price-amt">$4,500<span>/mo</span></div>
+                        <div class="lp-price-sub">Up to 5,000 claims / month</div>
+                        <ul class="lp-price-features">
+                            <li><i data-lucide="check-circle"></i> All 3 AI detection modules</li>
+                            <li><i data-lucide="check-circle"></i> Investigator dashboard</li>
+                            <li><i data-lucide="check-circle"></i> REST API access</li>
+                            <li><i data-lucide="check-circle"></i> Email support &amp; onboarding</li>
+                            <li><i data-lucide="check-circle"></i> 99.5% SLA uptime</li>
+                        </ul>
+                        <button class="lp-price-btn outline-btn" onclick="enterApp()">Request Access</button>
+                    </div>
+                    <div class="lp-price-card featured-plan">
+                        <div class="featured-label">MOST POPULAR</div>
+                        <div class="lp-price-tier">Growth</div>
+                        <div class="lp-price-amt">$12,000<span>/mo</span></div>
+                        <div class="lp-price-sub">Up to 25,000 claims / month</div>
+                        <ul class="lp-price-features">
+                            <li><i data-lucide="check-circle"></i> Everything in Starter</li>
+                            <li><i data-lucide="check-circle"></i> Priority SIU workspace</li>
+                            <li><i data-lucide="check-circle"></i> Webhook &amp; CMS integration</li>
+                            <li><i data-lucide="check-circle"></i> Dedicated Customer Success Manager</li>
+                            <li><i data-lucide="check-circle"></i> 99.9% SLA uptime</li>
+                        </ul>
+                        <button class="lp-price-btn primary-btn" onclick="enterApp()">Book a Demo</button>
+                    </div>
+                    <div class="lp-price-card">
+                        <div class="lp-price-tier">Enterprise</div>
+                        <div class="lp-price-amt">Custom<span></span></div>
+                        <div class="lp-price-sub">Unlimited &middot; On-premise available</div>
+                        <ul class="lp-price-features">
+                            <li><i data-lucide="check-circle"></i> Everything in Growth</li>
+                            <li><i data-lucide="check-circle"></i> On-premise / private cloud</li>
+                            <li><i data-lucide="check-circle"></i> Custom model training on your data</li>
+                            <li><i data-lucide="check-circle"></i> 24/7 dedicated support &amp; SLA</li>
+                            <li><i data-lucide="check-circle"></i> SOC 2 &amp; compliance reporting</li>
+                        </ul>
+                        <button class="lp-price-btn outline-btn" onclick="enterApp()">Talk to Sales</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- B2B CTA -->
+        <section class="lp-cta-section">
+            <div class="lp-inner">
+                <div class="lp-cta-card">
+                    <div class="lp-cta-icon"><i data-lucide="calendar"></i></div>
+                    <h2>See FraudLens AI in Action</h2>
+                    <p>Get a 30-minute product demo tailored to your team's fraud detection challenges. No commitment
+                        required.</p>
+                    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
+                        <button class="lp-btn-primary lp-btn-lg" onclick="enterApp()"><i data-lucide="calendar"></i>
+                            Book a Demo</button>
+                        <button class="lp-btn-outline lp-btn-lg"
+                            style="background:transparent;color:rgba(255,255,255,0.85);border-color:rgba(255,255,255,0.3)"
+                            onclick="enterApp()"><i data-lucide="layout-dashboard"></i> Try the Platform</button>
+                    </div>
+                    <p class="lp-cta-note">Avg. enterprise onboarding: 2 weeks &middot; SOC 2 certified &middot; GDPR
+                        compliant</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="lp-footer">
+            <div class="lp-inner lp-foot-inner">
+                <div class="lp-foot-brand">
+                    <div class="lnav-logo-icon sm"><i data-lucide="shield-check"></i></div><span>FraudLens AI</span>
+                </div>
+                <p class="lp-foot-note">&copy; 2026 FraudLens AI &mdash; Enterprise Insurance Fraud Detection Platform
+                </p>
+                <div class="lp-foot-links"><a href="#">Privacy</a><a href="#">Security</a><a href="#">Terms</a><a
+                        href="#">Contact Sales</a></div>
+            </div>
+        </footer>
+
+    </div><!-- /landing-page -->
+
+    <!-- ================================================================
+     APP SHELL — hidden until Get Started is clicked
+================================================================ -->
+    <div id="app-shell" style="display:none;">
+
+        <!-- App Navbar -->
+        <header class="app-nav">
+            <div class="app-nav-inner">
+                <a class="app-logo" onclick="backToLanding()">
+                    <div class="app-logo-icon"><i data-lucide="shield-check"></i></div>
+                    <span>FraudLens <strong>AI</strong></span>
+                </a>
+                <nav class="app-tabs">
+                    <button class="app-tab active" data-view="analyze" onclick="switchView('analyze')"><i
+                            data-lucide="upload-cloud"></i> Analyze Claim</button>
+
+                    <button class="app-tab" data-view="investigations" onclick="switchView('investigations')"><i
+                            data-lucide="user-check"></i> Investigations</button>
+
+                    <button class="app-tab"
+                        onclick="window.location.href='../../insurance-fraud-platform/insurance-fraud-platform/dist/index.html'"><i
+                            data-lucide="pie-chart"></i> Dashboard</button>
+                </nav>
+                <div class="app-nav-right">
+                    <div class="status-live"><span class="pulse-dot"></span> Live</div>
+                    <div class="app-avatar">SA</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ====================================================
+       VIEW: ANALYZE CLAIM
+       Shows 3 sub-states: upload → analyzing → results
+  ==================================================== -->
+        <div id="view-analyze" class="app-view active">
+
+            <!-- STATE 1: Upload Form -->
+            <div id="state-upload" class="app-state active">
+                <div class="analyze-wrap">
+                    <div class="analyze-header">
+                        <h1 class="analyze-title">Analyze an Insurance Claim</h1>
+                        <p class="analyze-sub">Upload a claim document and fill in the details below. Our AI will detect
+                            fraud across medical billing, motor behavior, and document metadata in seconds.</p>
+                    </div>
+
+                    <div class="upload-form-grid">
+                        <!-- LEFT: Upload + Claim Type -->
+                        <div class="upload-left">
+                            <!-- Upload Zone -->
+                            <div class="upload-zone" id="upload-zone" onclick="triggerUpload()">
+                                <div class="uz-icon"><i data-lucide="upload-cloud"></i></div>
+                                <div class="uz-title">Drag &amp; drop your claim document here</div>
+                                <div class="uz-sub">PDF, PNG, JPG, DOCX, CSV &mdash; Hospital bills, accident reports,
+                                    policy
+                                    forms</div>
+                                <button class="uz-btn" type="button">Browse Files</button>
+                                <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg,.docx,.csv"
+                                    style="display:none" onchange="handleFileSelect(this)">
+                            </div>
+                            <!-- File attached indicator -->
+                            <div class="file-attached" id="file-attached" style="display:none">
+                                <div class="fa-icon"><i data-lucide="file-check"></i></div>
+                                <div class="fa-info">
+                                    <div class="fa-name" id="fa-name">claim_document.pdf</div>
+                                    <div class="fa-size" id="fa-size">2.3 MB &middot; Ready for analysis</div>
+                                </div>
+                                <button class="fa-remove" onclick="removeFile()"><i data-lucide="x"></i></button>
+                            </div>
+
+                            <!-- Claim Type Toggle -->
+                            <div class="claim-type-section">
+                                <div class="claim-type-label">Select Claim Type</div>
+                                <div class="claim-type-pills">
+                                    <button class="ctp active" data-type="medical"
+                                        onclick="selectClaimType('medical')"><i data-lucide="stethoscope"></i>
+                                        Medical</button>
+                                    <button class="ctp" data-type="motor" onclick="selectClaimType('motor')"><i
+                                            data-lucide="car"></i> Motor Vehicle</button>
+                                    <button class="ctp" data-type="document" onclick="selectClaimType('document')"><i
+                                            data-lucide="file-search"></i> Policy / Document</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Claim Details Form -->
+                        <div class="upload-right">
+                            <div class="claim-form-card">
+                                <div class="cfc-header"><i data-lucide="clipboard-list"></i> Claim Details</div>
+
+                                <!-- MEDICAL FIELDS -->
+                                <div id="fields-medical" class="form-fields active">
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Claim ID</label><input type="text" id="m-claim-id"
+                                                placeholder="e.g. MED-2026-4521" value="MED-2026-4521"></div>
+                                        <div class="ff"><label>Patient Name</label><input type="text" id="m-patient"
+                                                placeholder="Full name" value="John Doe"></div>
+                                    </div>
+                                    <div class="ff"><label>Hospital / Provider</label><input type="text" id="m-hospital"
+                                            placeholder="Hospital name" value="City General Medical Center"></div>
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Total Billed Amount ($)</label><input type="number"
+                                                id="m-amount" placeholder="0.00" value="10307"></div>
+                                        <div class="ff"><label>Insurance Policy ID</label><input type="text"
+                                                id="m-policy" placeholder="Policy number" value="POL-HLT-9921-A"></div>
+                                    </div>
+                                    <div class="ff"><label>Procedures / Diagnosis Codes</label><input type="text"
+                                            id="m-codes" placeholder="e.g. 99285, 72148, 27447"
+                                            value="99285, 72148, Surgical Suite"></div>
+                                    <div class="ff"><label>Date of Service</label><input type="date" id="m-date"
+                                            value="2026-02-22"></div>
+                                </div>
+
+                                <!-- MOTOR FIELDS -->
+                                <div id="fields-motor" class="form-fields">
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Claim ID</label><input type="text" id="mot-id"
+                                                placeholder="e.g. MOT-2026-1832" value="MOT-2026-1832"></div>
+                                        <div class="ff"><label>Claimant Name</label><input type="text" id="mot-name"
+                                                placeholder="Full name" value="Priya Nair"></div>
+                                    </div>
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Vehicle Make / Model</label><input type="text"
+                                                id="mot-vehicle" placeholder="e.g. Toyota Camry 2021"
+                                                value="Toyota Camry 2021"></div>
+                                        <div class="ff"><label>Registration</label><input type="text" id="mot-reg"
+                                                placeholder="Plate number" value="MH-12-AB-9876"></div>
+                                    </div>
+                                    <div class="ff"><label>Accident Location</label><input type="text" id="mot-loc"
+                                            placeholder="Location of incident"
+                                            value="Highway 45, Sector 7B — Remote area, no witnesses"></div>
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Claim Amount ($)</label><input type="number"
+                                                id="mot-amount" placeholder="0.00" value="18500"></div>
+                                        <div class="ff"><label>Previous Claims (3 yrs)</label><input type="number"
+                                                id="mot-prev" placeholder="0" value="4"></div>
+                                    </div>
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Days Since Policy Start</label><input type="number"
+                                                id="mot-days" placeholder="0" value="18"></div>
+                                        <div class="ff"><label>Police Report Filed?</label>
+                                            <select id="mot-police">
+                                                <option value="no">No</option>
+                                                <option value="yes">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- DOCUMENT FIELDS -->
+                                <div id="fields-document" class="form-fields">
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Policy Number</label><input type="text" id="doc-policy"
+                                                placeholder="Policy number" value="FL-9910-RKS-2026"></div>
+                                        <div class="ff"><label>Policy Holder Name</label><input type="text"
+                                                id="doc-holder" placeholder="Full name" value="Rajesh Kumar Sharma">
+                                        </div>
+                                    </div>
+                                    <div class="ff-row2">
+                                        <div class="ff"><label>Policy Activation Date</label><input type="date"
+                                                id="doc-start" value="2026-02-16"></div>
+                                        <div class="ff"><label>Claim Submission Date</label><input type="date"
+                                                id="doc-claim" value="2026-02-19"></div>
+                                    </div>
+                                    <div class="ff"><label>Identity Document (Aadhaar / Passport /
+                                            License)</label><input type="text" id="doc-id"
+                                            placeholder="Document ID number" value="Aadhaar: XXXX-XXXX-9821"></div>
+                                    <div class="ff"><label>Claim Description</label><textarea id="doc-desc"
+                                            placeholder="Briefly describe the claim...">Vehicle total loss claim submitted 3 days after policy purchase. Remote location, no police report.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="analyze-btn" id="analyze-btn" onclick="startAnalysis()">
+                                <i data-lucide="cpu"></i> Run Fraud Detection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATE 2: Analyzing (progress animation) -->
+            <div id="state-analyzing" class="app-state">
+                <div class="analyzing-wrap">
+                    <div class="analyzing-card">
+                        <div class="analyzing-spinner">
+                            <div class="spinner-ring"></div>
+                            <div class="spinner-icon"><i data-lucide="cpu"></i></div>
+                        </div>
+                        <h2 class="analyzing-title">Analyzing Claim&hellip;</h2>
+                        <p class="analyzing-sub" id="analyzing-msg">Initializing fraud detection modules&hellip;</p>
+                        <div class="analyzing-steps" id="analyzing-steps">
+                            <div class="astep" id="astep-1">
+                                <div class="astep-dot"></div>
+                                <div class="astep-text">Parsing claim document</div>
+                                <div class="astep-status"></div>
+                            </div>
+                            <div class="astep" id="astep-2">
+                                <div class="astep-dot"></div>
+                                <div class="astep-text">Running Medical Fraud module</div>
+                                <div class="astep-status"></div>
+                            </div>
+                            <div class="astep" id="astep-3">
+                                <div class="astep-dot"></div>
+                                <div class="astep-text">Running Motor Fraud ML classifier</div>
+                                <div class="astep-status"></div>
+                            </div>
+                            <div class="astep" id="astep-4">
+                                <div class="astep-dot"></div>
+                                <div class="astep-text">Running Document &amp; Policy analysis</div>
+                                <div class="astep-status"></div>
+                            </div>
+                            <div class="astep" id="astep-5">
+                                <div class="astep-dot"></div>
+                                <div class="astep-text">Computing unified Fraud Risk Score</div>
+                                <div class="astep-status"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATE 3: Results -->
+            <div id="state-results" class="app-state">
+                <div class="results-wrap">
+
+                    <!-- Results Header -->
+                    <div class="results-header">
+                        <div class="rh-left">
+                            <div class="rh-claim-id" id="res-claim-id">MED-2026-4521</div>
+                            <h2 class="rh-title">Fraud Analysis Results</h2>
+                            <p class="rh-sub" id="res-claim-meta">Medical Insurance &middot; City General Medical Center
+                                &middot; Analyzed Mar 6, 2026</p>
+                        </div>
+                        <div class="rh-actions">
+                            <button class="rh-btn rh-new" onclick="resetToUpload()"><i data-lucide="plus-circle"></i>
+                                Analyze New Claim</button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Score Hero Banner -->
+                    <div class="risk-banner" id="risk-banner">
+                        <div class="rb-score-col">
+                            <div class="rb-score-label">FRAUD RISK SCORE</div>
+                            <div class="rb-score-num" id="rb-score">80</div>
+                            <div class="rb-score-tag" id="rb-tag">HIGH RISK</div>
+                        </div>
+                        <div class="rb-divider"></div>
+                        <div class="rb-summary" id="rb-summary">
+                            <div class="rb-summary-icon"><i data-lucide="alert-triangle"></i></div>
+                            <div>
+                                <strong id="rb-verdict">This claim shows strong indicators of fraud</strong>
+                                <p id="rb-verdict-sub">3 critical anomalies detected across Medical Billing, Motor
+                                    Behavior, and Document analysis modules. Immediate investigation recommended.</p>
+                            </div>
+                        </div>
+                        <div class="rb-action-col">
+                            <button class="rb-approve" onclick="doResultAction('approve')"><i
+                                    data-lucide="check-circle"></i> Approve</button>
+                            <button class="rb-investigate" onclick="doResultAction('investigate')"><i
+                                    data-lucide="search"></i> Investigate</button>
+                            <button class="rb-reject" onclick="doResultAction('reject')"><i data-lucide="x-circle"></i>
+                                Reject</button>
+                        </div>
+                    </div>
+
+                    <!-- Module results grid -->
+                    <div class="module-results-grid">
+
+                        <!-- Medical Module Result -->
+                        <div class="module-result-card" id="mod-medical">
+                            <div class="mrc-header">
+                                <div class="mrc-icon red"><i data-lucide="stethoscope"></i></div>
+                                <div>
+                                    <div class="mrc-label">Medical Fraud Module</div>
+                                    <div class="mrc-score-row"><span class="mrc-score" id="med-score">87</span><span
+                                            class="mrc-risk red-text" id="med-risk">HIGH RISK</span></div>
+                                </div>
+                                <div class="mrc-bar-wrap">
+                                    <div class="mrc-bar red-bar" id="med-bar" style="width:87%"></div>
+                                </div>
+                            </div>
+                            <div class="billing-table-wrap">
+                                <table class="billing-table" id="billing-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Service / Procedure</th>
+                                            <th>Official Price</th>
+                                            <th>Billed Price</th>
+                                            <th>Difference</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="billing-rows"></tbody>
+                                </table>
+                            </div>
+                            <div class="mrc-finding red-finding" id="med-finding">
+                                <i data-lucide="alert-circle"></i>
+                                <div><strong>Emergency Visit billed at 5.5× official rate. MRI inflated by 462%. $1,800
+                                        phantom surgical charge detected.</strong><br><span>Total suspected overcharge:
+                                        <strong class="red-text">$7,220</strong></span></div>
+                            </div>
+                        </div>
+
+                        <!-- Motor Module Result -->
+                        <div class="module-result-card" id="mod-motor">
+                            <div class="mrc-header">
+                                <div class="mrc-icon orange"><i data-lucide="car"></i></div>
+                                <div>
+                                    <div class="mrc-label">Motor Fraud Module (ML)</div>
+                                    <div class="mrc-score-row"><span class="mrc-score" id="mot-score">72</span><span
+                                            class="mrc-risk orange-text" id="mot-risk">HIGH RISK</span></div>
+                                </div>
+                                <div class="mrc-bar-wrap">
+                                    <div class="mrc-bar orange-bar" id="mot-bar" style="width:72%"></div>
+                                </div>
+                            </div>
+                            <div class="signals-list" id="signals-list">
+                                <div class="sig-item high"><i data-lucide="alert-triangle"></i>
+                                    <div><strong>4 Previous Claims in 3 Years</strong>
+                                        <p>Top 5% nationally — significantly above average claim frequency.</p>
+                                    </div>
+                                </div>
+                                <div class="sig-item high"><i data-lucide="clock"></i>
+                                    <div><strong>Policy Active Only 18 Days</strong>
+                                        <p>Claim filed extremely early after activation — strong staged fraud indicator.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="sig-item high"><i data-lucide="map-pin"></i>
+                                    <div><strong>Remote Location — No Witnesses</strong>
+                                        <p>Late-night incident on isolated highway with zero witness accounts.</p>
+                                    </div>
+                                </div>
+                                <div class="sig-item medium"><i data-lucide="file-x"></i>
+                                    <div><strong>No Police Report Filed</strong>
+                                        <p>Significant damage claimed but no official incident report exists.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Document Module Result -->
+                        <div class="module-result-card" id="mod-document">
+                            <div class="mrc-header">
+                                <div class="mrc-icon blue"><i data-lucide="file-search"></i></div>
+                                <div>
+                                    <div class="mrc-label">Document &amp; Policy Module</div>
+                                    <div class="mrc-score-row"><span class="mrc-score" id="doc-score">91</span><span
+                                            class="mrc-risk red-text" id="doc-risk">HIGH RISK</span></div>
+                                </div>
+                                <div class="mrc-bar-wrap">
+                                    <div class="mrc-bar blue-bar" id="doc-bar" style="width:91%"></div>
+                                </div>
+                            </div>
+                            <div class="timeline-mini" id="timeline-mini">
+                                <div class="tm-event blue-ev">
+                                    <div class="tm-dot"></div>
+                                    <div class="tm-info"><strong>Policy Activated</strong><span id="tm-start">Feb 16,
+                                            2026</span></div>
+                                </div>
+                                <div class="tm-line">
+                                    <div class="tm-line-fill" style="width:20%"></div>
+                                    <div class="tm-gap-badge">3 DAYS</div>
+                                </div>
+                                <div class="tm-event red-ev">
+                                    <div class="tm-dot"></div>
+                                    <div class="tm-info"><strong class="red-text">Claim Filed</strong><span
+                                            id="tm-claim">Feb 19, 2026</span></div>
+                                </div>
+                                <div class="tm-line gray"></div>
+                                <div class="tm-event gray-ev">
+                                    <div class="tm-dot"></div>
+                                    <div class="tm-info"><strong>Avg. Normal Gap</strong><span>247 days</span></div>
+                                </div>
+                            </div>
+                            <div class="doc-anomalies" id="doc-anomalies">
+                                <div class="doc-anm red-anm"><i data-lucide="alert-triangle"></i>
+                                    <div><strong>Claim filed 3 days after policy purchase</strong>
+                                        <p>Top 2% nationally of suspicious submission timing.</p>
+                                    </div>
+                                </div>
+                                <div class="doc-anm orange-anm"><i data-lucide="user-x"></i>
+                                    <div><strong>Identity document mismatch</strong>
+                                        <p>Policy holder name does not match Aadhaar photo metadata.</p>
+                                    </div>
+                                </div>
+                                <div class="doc-anm orange-anm"><i data-lucide="file-x"></i>
+                                    <div><strong>PDF metadata tampering</strong>
+                                        <p>Document creation date precedes the stated incident date by 1 day.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /module-results-grid -->
+
+                    <!-- AI Explanation -->
+                    <div class="ai-explanation-card">
+                        <div class="aec-header">
+                            <div class="aec-icon"><i data-lucide="sparkles"></i></div>
+                            <div><strong>AI Explanation</strong>
+                                <p>Why this claim was flagged as <span id="aec-risk-level">HIGH RISK</span></p>
+                            </div>
+                        </div>
+                        <div class="aec-body" id="aec-body">
+                            This claim has been flagged with a <strong class="red-text">HIGH RISK score of
+                                80/100</strong> based on converging evidence across all three detection modules.
+                            The Medical module identified emergency department billing at 5.5× the official rate, a
+                            phantom surgical charge, and an MRI inflated by 462%.
+                            The Motor ML classifier detected 4 prior claims in 3 years, a policy activated only 18 days
+                            before the incident, and no police report.
+                            The Document module confirmed the claim was submitted just 3 days after policy purchase,
+                            with an identity metadata mismatch and tampered PDF timestamps.
+                            <strong>Recommendation: Escalate immediately to a senior fraud investigator and require
+                                in-person claimant interview.</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </div><!-- /state-results -->
+        </div><!-- /view-analyze -->
+
+
+
+        <!-- ====================================================
+       VIEW: INVESTIGATIONS
+  ==================================================== -->
+        <div id="view-investigations" class="app-view">
+            <div class="view-inner">
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Investigation Queue</h2>
+                        <p class="view-sub">Review and take action on flagged claims</p>
+                    </div>
+                    <div class="view-actions">
+                        <div class="search-wrap"><i data-lucide="search"></i><input type="text"
+                                placeholder="Search claims..." id="inv-search" oninput="filterInv()"></div>
+                        <select class="sel-sm" id="inv-risk" onchange="filterInv()">
+                            <option value="all">All Risk Levels</option>
+                            <option value="high">High Risk</option>
+                            <option value="medium">Medium Risk</option>
+                            <option value="low">Low Risk</option>
+                        </select>
+                        <button class="btn-sm-outline" onclick="switchView('analyze')"><i data-lucide="plus"></i> New
+                            Claim</button>
+                    </div>
+                </div>
+                <div class="inv-grid">
+                    <div class="inv-queue" id="inv-queue"></div>
+                    <div class="inv-detail" id="inv-detail">
+                        <div class="empty-state"><i data-lucide="mouse-pointer-click"></i>
+                            <p>Select a claim to review</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /app-shell -->
+
+    <!-- Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
